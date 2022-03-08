@@ -68,8 +68,8 @@ router.route("/signup").post(async (req, res) => {
   const storetoken = await updateUser(email, token);
 
   //crate a link for twostep verification
-  const link = `https://music-player7.herokuapp.com/users/twostepverification/${token}`;
-  // const link = `http://localhost:8000/users/twostepverification/${token}`
+  // const link = `https://music-player7.herokuapp.com/users/twostepverification/${token}`;
+  const link = `http://localhost:8000/users/twostepverification/${token}`
 
 
   const message = `<h3>Greetings ${fname} !!!</h3>
@@ -80,7 +80,7 @@ router.route("/signup").post(async (req, res) => {
 <p>Regards,</p>  
 <p>Shasha Player Team</p>`;
   //sent mail for activate the account
-  const mail = Mail(email, res, message);
+Mail(email, res, message);
 });
 
 router.route("/twostepverification/:id").get(async (req, res) => {
@@ -99,9 +99,9 @@ router.route("/twostepverification/:id").get(async (req, res) => {
       .db("music")
       .collection("users")
       .updateOne({ _id }, { $set: { Status: "Active", token: "" } });
-    res.redirect(`https://nostalgic-kilby-9dd1c7.netlify.app/activationmessage`);
+    // res.redirect(`https://nostalgic-kilby-9dd1c7.netlify.app/activationmessage`);
 
-    // res.redirect('http://localhost:3000/activationmessage')
+    res.redirect('http://localhost:3000/activationmessage')
 
   } catch (err) {
     return res.status(400).send({ Message: "Link Expired" });
@@ -167,9 +167,9 @@ router.route("/forgotpassword").post(async (req, res) => {
     .collection("users")
     .updateOne({ _id: _id }, { $set: { password: token } });
   // console.log(tokenchange);
-  const link = `https://music-player7.herokuapp.com/users/forgotpassword/verify/${token}`;
+  // const link = `https://music-player7.herokuapp.com/users/forgotpassword/verify/${token}`;
 
-  // const link = `http://localhost:8000/users/forgotpassword/verify/${token}`
+  const link = `http://localhost:8000/users/forgotpassword/verify/${token}`
 
   const message = `<h3>Greetings ${fname} !!!</h3>
     <p>Welcome to the world of Shasha Player</p>
@@ -199,8 +199,8 @@ router.route("/forgotpassword/verify/:id").get(async (req, res) => {
   if (!datacheck) {
     return res.status(400).send({ Message: "Link Expired" });
   }
-  return res.redirect(`https://nostalgic-kilby-9dd1c7.netlify.app/resetpassword/${id}`);
-  // return res.redirect(`http://localhost:3000/resetpassword/${id}`);
+  // return res.redirect(`https://nostalgic-kilby-9dd1c7.netlify.app/resetpassword/${id}`);
+  return res.redirect(`http://localhost:3000/resetpassword/${id}`);
 
 });
 
