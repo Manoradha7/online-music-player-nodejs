@@ -276,4 +276,5 @@ router.route("/:id").delete(auth, (req, res) => {
   res.status(200).send({ Message: "Successfully deleted User" });
 });
 
+
 export const UserRouter = router;
