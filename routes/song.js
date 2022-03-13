@@ -7,7 +7,7 @@ const router =express.Router();
 //create song 
 router.route('/').post(async(req,res)=>{
     const data = req.body;
-    const song = await client.db("music").collection('songs').insertMany(data);
+    const song = await client.db("music").collection('songs').insertOne(data);
     res.status(201).send({data:song,Message:"Song Created Successfully"})
 });
 
@@ -16,6 +16,19 @@ router.route('/').get(async(req,res)=>{
     // const data = req.query;
     const songs = await client.db("music").collection("songs").find().toArray() 
     res.status(200).send(songs)
+    
+})
+
+// get favourite Songs
+router.route('/favourite').get(async(req,res)=>{
+    const filter = req.query;
+    // console.log(filter);
+    if(filter.favourite= true){
+        filter.favourite == filter.favourite;
+    }
+    const filteredSongs = await client.db("music").collection("songs").find(filter).toArray() 
+    // console.log(filteredSongs);
+    res.send(filteredSongs)
 })
 
 //update song
@@ -34,17 +47,18 @@ router.route("/:id").delete(auth,async(req,res)=>{
 })
 
 //like song
-router.route("/:id").put(auth,async(req,res)=>{
+router.route("/liked/:id").put(async(req,res)=>{
     const {id}= req.params;
-    
-    const song =await client.db("music").collection("songs").findOne({_id:ObjectId(id)})
-
-    if(!song){
-        return res.status(400).send({Message:"Song Does not Exist"})
-    } 
-
-    const user = await client.db('music').collection("users").findOne({_id:ObjectId(id)})
-    
-
+    const song = await client.db("music").collection("songs").findOne({_id:ObjectId(id)});
+    // console.log(song)
+    const updateSong =await client.db("music").collection("songs").updateOne(song,{$set:{favourite:true}})
+    // console.log(updateSong)
+})
+router.route("/disliked/:id").put(async(req,res)=>{
+    const {id}= req.params;
+    const song = await client.db("music").collection("songs").findOne({_id:ObjectId(id)});
+    // console.log(song)
+    const updateSong =await client.db("music").collection("songs").updateOne(song,{$set:{favourite:false}})
+    // console.log(updateSong)
 })
 export const SongRouter =router;
